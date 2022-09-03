@@ -3,6 +3,7 @@ from aiogram.utils import executor
 import sp_adm
 from create_bot import dp, bot, pay_token
 from aiogram import types
+from aiogram.dispatcher.filters import Text
 from keyboard_main import *
 from keyboard_helmet_mk0 import *
 from keyboard_helmet_mk2 import *
@@ -20,8 +21,8 @@ async def on_startup(_):
     sklad.sklad_bd_start()
 
 
-
-@dp.message_handler(commands = ['start', 'старт', "ВНачало"])
+@dp.message_handler(commands=['start'])
+@dp.message_handler(Text(equals=['start', 'старт', "В Начало"]))
 async def start_window(message: types.Message):
     if message.from_user.id == sp_adm.admin:
         await bot.send_message(message.from_user.id, 'Выберите интересующую вас категорию', reply_markup = kb_adm_main)
@@ -30,19 +31,19 @@ async def start_window(message: types.Message):
     await sklad.user_add(message)
     await message.delete()
 
-@dp.message_handler(commands = ["Условия_заказа"])
+@dp.message_handler(Text(equals=["Условия заказа"]))
 async def start_window(message: types.Message):
     await bot.send_message(message.from_user.id, 'Доставка осуществляется через офисы компании СДЭК по территории РФ. '
                                                  'Заказы на территорию ближнего зарубежья обсуждаются в отдельном порядке. Доставка на территорию недружественных государств не осуществляется. '
                                                  'Время доставки - 45 рабочих дней (реалии проведения СВО).')
     await message.delete()
 
-@dp.message_handler(commands = ["Для_оптовых_заказов"])
+@dp.message_handler(Text(equals=["Для оптовых заказов"]))
 async def opt(message: types.Message):
     await bot.send_message(message.from_user.id, 'Оптовые заказы товаров компании АТЛАС осуществляются по номеру 89234127626')
     await message.delete()
 
-@dp.message_handler(commands = ["О_компании_АТЛАС"])
+@dp.message_handler(Text(equals=["О компании АТЛАС"]))
 async def opt(message: types.Message):
     await bot.send_message(message.from_user.id, 'Мы разрабатываем из производим серийно:\n- Бронешлемы из СВМПЭ \
     и композитных материалов;\n- Анатомические СВМПЭ бронепластины и бронеплиты начиная с БР1 класса, а так же \
@@ -65,7 +66,7 @@ async def opt(message: types.Message):
 
 """ В данном разделе идет бок по товарам
 ________________________________________"""
-@dp.message_handler(commands = ["Розница"])
+@dp.message_handler(Text(equals=["Розница"]))
 async def opt(message: types.Message):
     if message.from_user.id == sp_adm.admin:
         await bot.send_message(message.from_user.id, 'Братан, грузи, правь', reply_markup=kb_adm_zagr)
@@ -76,7 +77,7 @@ async def opt(message: types.Message):
 
 """ Шлемаки
 _____________________________________________________________"""
-@dp.message_handler(commands = ["МоиЗаказы"])
+@dp.message_handler(Text(equals=["Мои Заказы"]))
 async def my_zaks(message: types.Message):
     await message.delete()
     await sklad.k_story(message)
@@ -84,7 +85,7 @@ async def my_zaks(message: types.Message):
     адреса получения заказа нажмите кнопку 'Изменить данные получателя' (доступно в течении 20 дней от даты создания заказа)", reply_markup=kb_client_izmzak)
 
 
-@dp.message_handler(commands = ["Шлемы"])
+@dp.message_handler(Text(equals=["Шлемы"]))
 async def helmet(message: types.Message):
     await message.delete()
     await sklad.sklad_read(message)
@@ -92,12 +93,12 @@ async def helmet(message: types.Message):
 
 
 
-    @dp.message_handler(commands=["MK0"])
+    @dp.message_handler(Text(equals=["MK0"]))
     async def helmet(message: types.Message):
         await bot.send_message(message.from_user.id, 'Выберите форму ', reply_markup=k_mk0)
         await message.delete()
 
-        @dp.message_handler(commands = ["Ушастый(0)"])
+        @dp.message_handler(Text(equals=["Ушастый(0)"]))
         async def helmet(message: types.Message):
             await sklad.sklad_read(message)
             await bot.send_message(message.from_user.id, 'Выберите комплектацию ', reply_markup = k_mk0_uh)
@@ -105,500 +106,500 @@ async def helmet(message: types.Message):
 
 
 
-            @dp.message_handler(commands=["Штатный(0Y)"])
+            @dp.message_handler(Text(equals=["Штатный(0Y)"]))
             async def helmet(message: types.Message):
                 await sklad.sklad_read(message)
                 await bot.send_message(message.from_user.id, 'Выберите цвет', reply_markup=k_mk0_uh_st)
                 await message.delete()
 
 
-                @dp.message_handler(commands = ["Черный(0YS)"])
+                @dp.message_handler(Text(equals=["Черный(0YS)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk0_uh_st_b)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(0YSB)"])
+                    @dp.message_handler(Text(equals=["56(0YSB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк0 черный Ушастый, штатная комплектация, 56 размер. Стоимость 47550 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk0_uh_b_st_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(0YSB56)"])
+                        @dp.message_handler(Text(equals=["Заказать(0YSB56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(0YSB)"])
+                    @dp.message_handler(Text(equals=["58(0YSB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 черный Ушастый, штатная комплектация, 58 размер. Стоимость 47550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_uh_b_st_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0YSB58)"])
+                        @dp.message_handler(Text(equals=["Заказать(0YSB58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
 
-                    @dp.message_handler(commands=["60(0YSB)"])
+                    @dp.message_handler(Text(equals=["60(0YSB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 черный Ушастый, штатная комплектация, 60 размер. Стоимость 47550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_uh_b_st_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0YSB60)"])
+                        @dp.message_handler(Text(equals=["Заказать(0YSB60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
 
-                @dp.message_handler(commands = ["Песочный(0YS)"])
+                @dp.message_handler(Text(equals=["Песочный(0YS)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk0_uh_st_s)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(0YSS)"])
+                    @dp.message_handler(Text(equals=["56(0YSS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк0 Песочный Ушастый, штатная комплектация, 56 размер. Стоимость 47550 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk0_uh_s_st_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(0YSS56)"])
+                        @dp.message_handler(Text(equals=["Заказать(0YSS56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(0YSS)"])
+                    @dp.message_handler(Text(equals=["58(0YSS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 Песочный Ушастый, штатная комплектация, 58 размер. Стоимость 47550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_uh_s_st_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0YSS58)"])
+                        @dp.message_handler(Text(equals=["Заказать(0YSS58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["60(0YSS)"])
+                    @dp.message_handler(Text(equals=["60(0YSS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 Песочный Ушастый, штатная комплектация, 60 размер. Стоимость 47550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_uh_s_st_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0YSS60)"])
+                        @dp.message_handler(Text(equals=["Заказать(0YSS60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                @dp.message_handler(commands = ["Олива(0YS)"])
+                @dp.message_handler(Text(equals=["Олива(0YS)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk0_uh_st_o)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(0YSO)"])
+                    @dp.message_handler(Text(equals=["56(0YSO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк0 Олива Ушастый, штатная комплектация, 56 размер. Стоимость 47550 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk0_uh_o_st_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(0YSO56)"])
+                        @dp.message_handler(Text(equals=["Заказать(0YSO56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(0YSO)"])
+                    @dp.message_handler(Text(equals=["58(0YSO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 Олива Ушастый, штатная комплектация, 58 размер. Стоимость 47550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_uh_o_st_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0YSO58)"])
+                        @dp.message_handler(Text(equals=["Заказать(0YSO58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["60(0YSO)"])
+                    @dp.message_handler(Text(equals=["60(0YSO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 Олива Ушастый, штатная комплектация, 60 размер. Стоимость 47550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_uh_o_st_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0YSO60)"])
+                        @dp.message_handler(Text(equals=["Заказать(0YSO60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
 
-            @dp.message_handler(commands=["МОД+(0Y)"])
+            @dp.message_handler(Text(equals=["МОД+(0Y)"]))
             async def helmet(message: types.Message):
                 await sklad.sklad_read(message)
                 await bot.send_message(message.from_user.id, 'Выберите цвет', reply_markup=k_mk0_uh_mod)
                 await message.delete()
 
 
-                @dp.message_handler(commands = ["Черный(0YM)"])
+                @dp.message_handler(Text(equals=["Черный(0YM)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk0_uh_mod_b)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(0YMB)"])
+                    @dp.message_handler(Text(equals=["56(0YMB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк0 черный Ушастый, МОД+ комплектация, 56 размер. Стоимость 57250 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk0_uh_b_mod_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(0YMB56)"])
+                        @dp.message_handler(Text(equals=["Заказать(0YMB56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(0YMB)"])
+                    @dp.message_handler(Text(equals=["58(0YMB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 черный Ушастый, МОД+ комплектация, 58 размер. Стоимость 57250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_uh_b_mod_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0YMB58)"])
+                        @dp.message_handler(Text(equals=["Заказать(0YMB58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
 
-                    @dp.message_handler(commands=["60(0YMB)"])
+                    @dp.message_handler(Text(equals=["60(0YMB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 черный Ушастый, МОД+ комплектация, 60 размер. Стоимость 57250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_uh_b_mod_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0YMB60)"])
+                        @dp.message_handler(Text(equals=["Заказать(0YMB60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
 
-                @dp.message_handler(commands = ["Песочный(0YM)"])
+                @dp.message_handler(Text(equals=["Песочный(0YM)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk0_uh_mod_s)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(0YMS)"])
+                    @dp.message_handler(Text(equals=["56(0YMS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк0 Песочный Ушастый, МОД+ комплектация, 56 размер. Стоимость 57250 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk0_uh_s_mod_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(0YMS56)"])
+                        @dp.message_handler(Text(equals=["Заказать(0YMS56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(0YMS)"])
+                    @dp.message_handler(Text(equals=["58(0YMS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 Песочный Ушастый, МОД+ комплектация, 58 размер. Стоимость 57250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_uh_s_mod_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0YMS58)"])
+                        @dp.message_handler(Text(equals=["Заказать(0YMS58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["60(0YMS)"])
+                    @dp.message_handler(Text(equals=["60(0YMS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 Песочный Ушастый, МОД+ комплектация, 60 размер. Стоимость 57250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_uh_s_mod_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0YMS60)"])
+                        @dp.message_handler(Text(equals=["Заказать(0YMS60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                @dp.message_handler(commands = ["Олива(0YM)"])
+                @dp.message_handler(Text(equals=["Олива(0YM)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk0_uh_mod_o)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(0YMO)"])
+                    @dp.message_handler(Text(equals=["56(0YMO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк0 Олива Ушастый, МОД+ комплектация, 56 размер. Стоимость 57250 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk0_uh_o_mod_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(0YMO56)"])
+                        @dp.message_handler(Text(equals=["Заказать(0YMO56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(0YMO)"])
+                    @dp.message_handler(Text(equals=["58(0YMO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 Олива Ушастый, МОД+ комплектация, 58 размер. Стоимость 57250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_uh_o_mod_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0YMO58)"])
+                        @dp.message_handler(Text(equals=["Заказать(0YMO58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
 
-                    @dp.message_handler(commands=["60(0YMO)"])
+                    @dp.message_handler(Text(equals=["60(0YMO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 Олива Ушастый, МОД+ комплектация, 60 размер. Стоимость 57250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_uh_o_mod_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0YMO60)"])
+                        @dp.message_handler(Text(equals=["Заказать(0YMO60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
 
 
-        @dp.message_handler(commands = ["Безухий(0)"])
+        @dp.message_handler(Text(equals=["Безухий(0)"]))
         async def helmet(message: types.Message):
             await sklad.sklad_read(message)
             await bot.send_message(message.from_user.id, 'Выберите комплектацию ', reply_markup = k_mk0_bu)
             await message.delete()
 
 
-            @dp.message_handler(commands=["Штатный(0B)"])
+            @dp.message_handler(Text(equals=["Штатный(0B)"]))
             async def helmet(message: types.Message):
                 await sklad.sklad_read(message)
                 await bot.send_message(message.from_user.id, 'Выберите цвет', reply_markup=k_mk0_bu_st)
                 await message.delete()
 
 
-                @dp.message_handler(commands = ["Черный(0BS)"])
+                @dp.message_handler(Text(equals=["Черный(0BS)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk0_bu_st_b)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(0BSB)"])
+                    @dp.message_handler(Text(equals=["56(0BSB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк0 черный безухий, штатная комплектация, 56 размер. Стоимость 47550 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk0_bu_b_st_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(0BSB56)"])
+                        @dp.message_handler(Text(equals=["Заказать(0BSB56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(0BSB)"])
+                    @dp.message_handler(Text(equals=["58(0BSB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 черный безухий, штатная комплектация, 58 размер. Стоимость 47550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_bu_b_st_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0BSB58)"])
+                        @dp.message_handler(Text(equals=["Заказать(0BSB58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["60(0BSB)"])
+                    @dp.message_handler(Text(equals=["60(0BSB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 черный безухий, штатная комплектация, 60 размер. Стоимость 47550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_bu_b_st_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0BSB60)"])
+                        @dp.message_handler(Text(equals=["Заказать(0BSB60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
 
-                @dp.message_handler(commands = ["Песочный(0BS)"])
+                @dp.message_handler(Text(equals=["Песочный(0BS)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk0_bu_st_s)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(0BSS)"])
+                    @dp.message_handler(Text(equals=["56(0BSS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк0 Песочный безухий, штатная комплектация, 56 размер. Стоимость 47550 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk0_bu_s_st_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(0BSS56)"])
+                        @dp.message_handler(Text(equals=["Заказать(0BSS56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(0BSS)"])
+                    @dp.message_handler(Text(equals=["58(0BSS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 Песочный безухий, штатная комплектация, 58 размер. Стоимость 47550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_bu_s_st_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0BSS58)"])
+                        @dp.message_handler(Text(equals=["Заказать(0BSS58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["60(0BSS)"])
+                    @dp.message_handler(Text(equals=["60(0BSS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 Песочный безухий, штатная комплектация, 60 размер. Стоимость 47550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_bu_s_st_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0BSS60)"])
+                        @dp.message_handler(Text(equals=["Заказать(0BSS60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                @dp.message_handler(commands = ["Олива(0BS)"])
+                @dp.message_handler(Text(equals=["Олива(0BS)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk0_bu_st_o)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(0BSO)"])
+                    @dp.message_handler(Text(equals=["56(0BSO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк0 Олива безухий, штатная комплектация, 56 размер. Стоимость 47550 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk0_bu_o_st_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(0BSO56)"])
+                        @dp.message_handler(Text(equals=["Заказать(0BSO56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(0BSO)"])
+                    @dp.message_handler(Text(equals=["58(0BSO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 Олива безухий, штатная комплектация, 58 размер. Стоимость 47550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_bu_o_st_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0BSO58)"])
+                        @dp.message_handler(Text(equals=["Заказать(0BSO58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["60(0BSO)"])
+                    @dp.message_handler(Text(equals=["60(0BSO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 Олива безухий, штатная комплектация, 60 размер. Стоимость 47550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_bu_o_st_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0BSO60)"])
+                        @dp.message_handler(Text(equals=["Заказать(0BSO60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
 
-            @dp.message_handler(commands=["МОД+(0B)"])
+            @dp.message_handler(Text(equals=["МОД+(0B)"]))
             async def helmet(message: types.Message):
                 await bot.send_message(message.from_user.id, 'Выберите цвет', reply_markup=k_mk0_bu_mod)
                 await message.delete()
                 await sklad.sklad_read(message)
 
-                @dp.message_handler(commands = ["Черный(0BM)"])
+                @dp.message_handler(Text(equals=["Черный(0BM)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk0_bu_mod_b)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(0BMB)"])
+                    @dp.message_handler(Text(equals=["56(0BMB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк0 черный безухий, МОД+ комплектация, 56 размер. Стоимость 57250 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk0_bu_b_mod_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(0BMB56)"])
+                        @dp.message_handler(Text(equals=["Заказать(0BMB56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(0BMB)"])
+                    @dp.message_handler(Text(equals=["58(0BMB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 черный безухий, МОД+ комплектация, 58 размер. Стоимость 57250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_bu_b_mod_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0BMB58)"])
+                        @dp.message_handler(Text(equals=["Заказать(0BMB58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["60(0BMB)"])
+                    @dp.message_handler(Text(equals=["60(0BMB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 черный безухий, МОД+ комплектация, 60 размер. Стоимость 57250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_bu_b_mod_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0BMB60)"])
+                        @dp.message_handler(Text(equals=["Заказать(0BMB60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                @dp.message_handler(commands = ["Песочный(0BM)"])
+                @dp.message_handler(Text(equals=["Песочный(0BM)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk0_bu_mod_s)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(0BMS)"])
+                    @dp.message_handler(Text(equals=["56(0BMS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк0 Песочный безухий, МОД+ комплектация, 56 размер. Стоимость 57250 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk0_bu_s_mod_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(0BMS56)"])
+                        @dp.message_handler(Text(equals=["Заказать(0BMS56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(0BMS)"])
+                    @dp.message_handler(Text(equals=["58(0BMS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 Песочный безухий, МОД+ комплектация, 58 размер. Стоимость 57250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_bu_s_mod_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0BMS58)"])
+                        @dp.message_handler(Text(equals=["Заказать(0BMS58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["60(0BMS)"])
+                    @dp.message_handler(Text(equals=["60(0BMS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 Песочный безухий, МОД+ комплектация, 60 размер. Стоимость 57250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_bu_s_mod_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0BMS60)"])
+                        @dp.message_handler(Text(equals=["Заказать(0BMS60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                @dp.message_handler(commands = ["Олива(0BM)"])
+                @dp.message_handler(Text(equals=["Олива(0BM)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk0_bu_mod_o)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(0BMO)"])
+                    @dp.message_handler(Text(equals=["56(0BMO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк0 Олива безухий, МОД+ комплектация, 56 размер. Стоимость 57250 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk0_bu_o_mod_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(0BMO56)"])
+                        @dp.message_handler(Text(equals=["Заказать(0BMO56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(0BMO)"])
+                    @dp.message_handler(Text(equals=["58(0BMO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 Олива безухий, МОД+ комплектация, 58 размер. Стоимость 57250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_bu_o_mod_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0BMO58)"])
+                        @dp.message_handler(Text(equals=["Заказать(0BMO58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["60(0BMO)"])
+                    @dp.message_handler(Text(equals=["60(0BMO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк0 Олива безухий, МОД+ комплектация, 60 размер. Стоимость 57250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk0_bu_o_mod_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(0BMO60)"])
+                        @dp.message_handler(Text(equals=["Заказать(0BMO60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-    @dp.message_handler(commands=["MK2"])
+    @dp.message_handler(Text(equals=["MK2"]))
     async def helmet(message: types.Message):
         await bot.send_message(message.from_user.id, 'Выберите форму ', reply_markup=k_mk2)
         await message.delete()
 
-        @dp.message_handler(commands = ["Ушастый(2)"])
+        @dp.message_handler(Text(equals=["Ушастый(2)"]))
         async def helmet(message: types.Message):
             await sklad.sklad_read(message)
             await bot.send_message(message.from_user.id, 'Выберите комплектацию ', reply_markup = k_mk2_uh)
@@ -606,503 +607,503 @@ async def helmet(message: types.Message):
 
 
 
-            @dp.message_handler(commands=["Штатный(2Y)"])
+            @dp.message_handler(Text(equals=["Штатный(2Y)"]))
             async def helmet(message: types.Message):
                 await sklad.sklad_read(message)
                 await bot.send_message(message.from_user.id, 'Выберите цвет', reply_markup=k_mk2_uh_st)
                 await message.delete()
 
 
-                @dp.message_handler(commands = ["Черный(2YS)"])
+                @dp.message_handler(Text(equals=["Черный(2YS)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk2_uh_st_b)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(2YSB)"])
+                    @dp.message_handler(Text(equals=["56(2YSB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк2 черный Ушастый, штатная комплектация, 56 размер. Стоимость 49550 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk2_uh_b_st_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(2YSB56)"])
+                        @dp.message_handler(Text(equals=["Заказать(2YSB56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(2YSB)"])
+                    @dp.message_handler(Text(equals=["58(2YSB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 черный Ушастый, штатная комплектация, 58 размер. Стоимость 49550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_uh_b_st_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2YSB58)"])
+                        @dp.message_handler(Text(equals=["Заказать(2YSB58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
 
-                    @dp.message_handler(commands=["60(2YSB)"])
+                    @dp.message_handler(Text(equals=["60(2YSB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 черный Ушастый, штатная комплектация, 60 размер. Стоимость 49550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_uh_b_st_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2YSB60)"])
+                        @dp.message_handler(Text(equals=["Заказать(2YSB60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
 
-                @dp.message_handler(commands = ["Песочный(2YS)"])
+                @dp.message_handler(Text(equals=["Песочный(2YS)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk2_uh_st_s)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(2YSS)"])
+                    @dp.message_handler(Text(equals=["56(2YSS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк2 Песочный Ушастый, штатная комплектация, 56 размер. Стоимость 49550 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk2_uh_s_st_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(2YSS56)"])
+                        @dp.message_handler(Text(equals=["Заказать(2YSS56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(2YSS)"])
+                    @dp.message_handler(Text(equals=["58(2YSS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 Песочный Ушастый, штатная комплектация, 58 размер. Стоимость 49550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_uh_s_st_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2YSS58)"])
+                        @dp.message_handler(Text(equals=["Заказать(2YSS58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["60(2YSS)"])
+                    @dp.message_handler(Text(equals=["60(2YSS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 Песочный Ушастый, штатная комплектация, 60 размер. Стоимость 49550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_uh_s_st_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2YSS60)"])
+                        @dp.message_handler(Text(equals=["Заказать(2YSS60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                @dp.message_handler(commands = ["Олива(2YS)"])
+                @dp.message_handler(Text(equals=["Олива(2YS)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk2_uh_st_o)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(2YSO)"])
+                    @dp.message_handler(Text(equals=["56(2YSO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк2 Олива Ушастый, штатная комплектация, 56 размер. Стоимость 49550 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk2_uh_o_st_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(2YSO56)"])
+                        @dp.message_handler(Text(equals=["Заказать(2YSO56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(2YSO)"])
+                    @dp.message_handler(Text(equals=["58(2YSO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 Олива Ушастый, штатная комплектация, 58 размер. Стоимость 49550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_uh_o_st_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2YSO58)"])
+                        @dp.message_handler(Text(equals=["Заказать(2YSO58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["60(2YSO)"])
+                    @dp.message_handler(Text(equals=["60(2YSO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 Олива Ушастый, штатная комплектация, 60 размер. Стоимость 49550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_uh_o_st_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2YSO60)"])
+                        @dp.message_handler(Text(equals=["Заказать(2YSO60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
 
-            @dp.message_handler(commands=["МОД+(2Y)"])
+            @dp.message_handler(Text(equals=["МОД+(2Y)"]))
             async def helmet(message: types.Message):
                 await sklad.sklad_read(message)
                 await bot.send_message(message.from_user.id, 'Выберите цвет', reply_markup=k_mk2_uh_mod)
                 await message.delete()
 
 
-                @dp.message_handler(commands = ["Черный(2YM)"])
+                @dp.message_handler(Text(equals=["Черный(2YM)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk2_uh_mod_b)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(2YMB)"])
+                    @dp.message_handler(Text(equals=["56(2YMB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк2 черный Ушастый, МОД+ комплектация, 56 размер. Стоимость 58250 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk2_uh_b_mod_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(2YMB56)"])
+                        @dp.message_handler(Text(equals=["Заказать(2YMB56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(2YMB)"])
+                    @dp.message_handler(Text(equals=["58(2YMB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 черный Ушастый, МОД+ комплектация, 58 размер. Стоимость 58250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_uh_b_mod_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2YMB58)"])
+                        @dp.message_handler(Text(equals=["Заказать(2YMB58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
 
-                    @dp.message_handler(commands=["60(2YMB)"])
+                    @dp.message_handler(Text(equals=["60(2YMB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 черный Ушастый, МОД+ комплектация, 60 размер. Стоимость 58250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_uh_b_mod_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2YMB60)"])
+                        @dp.message_handler(Text(equals=["Заказать(2YMB60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
 
-                @dp.message_handler(commands = ["Песочный(2YM)"])
+                @dp.message_handler(Text(equals=["Песочный(2YM)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk2_uh_mod_s)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(2YMS)"])
+                    @dp.message_handler(Text(equals=["56(2YMS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк2 Песочный Ушастый, МОД+ комплектация, 56 размер. Стоимость 58250 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk2_uh_s_mod_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(2YMS56)"])
+                        @dp.message_handler(Text(equals=["Заказать(2YMS56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(2YMS)"])
+                    @dp.message_handler(Text(equals=["58(2YMS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 Песочный Ушастый, МОД+ комплектация, 58 размер. Стоимость 58250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_uh_s_mod_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2YMS58)"])
+                        @dp.message_handler(Text(equals=["Заказать(2YMS58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["60(2YMS)"])
+                    @dp.message_handler(Text(equals=["60(2YMS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 Песочный Ушастый, МОД+ комплектация, 60 размер. Стоимость 58250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_uh_s_mod_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2YMS60)"])
+                        @dp.message_handler(Text(equals=["Заказать(2YMS60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                @dp.message_handler(commands = ["Олива(2YM)"])
+                @dp.message_handler(Text(equals=["Олива(2YM)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk2_uh_mod_o)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(2YMO)"])
+                    @dp.message_handler(Text(equals=["56(2YMO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк2 Олива Ушастый, МОД+ комплектация, 56 размер. Стоимость 58250 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk2_uh_o_mod_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(2YMO56)"])
+                        @dp.message_handler(Text(equals=["Заказать(2YMO56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(2YMO)"])
+                    @dp.message_handler(Text(equals=["58(2YMO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 Олива Ушастый, МОД+ комплектация, 58 размер. Стоимость 58250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_uh_o_mod_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2YMO58)"])
+                        @dp.message_handler(Text(equals=["Заказать(2YMO58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
 
-                    @dp.message_handler(commands=["60(2YMO)"])
+                    @dp.message_handler(Text(equals=["60(2YMO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 Олива Ушастый, МОД+ комплектация, 60 размер. Стоимость 58250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_uh_o_mod_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2YMO60)"])
+                        @dp.message_handler(Text(equals=["Заказать(2YMO60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
 
 
-        @dp.message_handler(commands = ["Безухий(2)"])
+        @dp.message_handler(Text(equals=["Безухий(2)"]))
         async def helmet(message: types.Message):
             await sklad.sklad_read(message)
             await bot.send_message(message.from_user.id, 'Выберите комплектацию ', reply_markup = k_mk2_bu)
             await message.delete()
 
 
-            @dp.message_handler(commands=["Штатный(2B)"])
+            @dp.message_handler(Text(equals=["Штатный(2B)"]))
             async def helmet(message: types.Message):
                 await sklad.sklad_read(message)
                 await bot.send_message(message.from_user.id, 'Выберите цвет', reply_markup=k_mk2_bu_st)
                 await message.delete()
 
 
-                @dp.message_handler(commands = ["Черный(2BS)"])
+                @dp.message_handler(Text(equals=["Черный(2BS)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk2_bu_st_b)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(2BSB)"])
+                    @dp.message_handler(Text(equals=["56(2BSB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк2 черный безухий, штатная комплектация, 56 размер. Стоимость 49550 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk2_bu_b_st_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(2BSB56)"])
+                        @dp.message_handler(Text(equals=["Заказать(2BSB56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(2BSB)"])
+                    @dp.message_handler(Text(equals=["58(2BSB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 черный безухий, штатная комплектация, 58 размер. Стоимость 49550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_bu_b_st_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2BSB58)"])
+                        @dp.message_handler(Text(equals=["Заказать(2BSB58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["60(2BSB)"])
+                    @dp.message_handler(Text(equals=["60(2BSB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 черный безухий, штатная комплектация, 60 размер. Стоимость 49550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_bu_b_st_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2BSB60)"])
+                        @dp.message_handler(Text(equals=["Заказать(2BSB60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
 
-                @dp.message_handler(commands = ["Песочный(2BS)"])
+                @dp.message_handler(Text(equals=["Песочный(2BS)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk2_bu_st_s)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(2BSS)"])
+                    @dp.message_handler(Text(equals=["56(2BSS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк2 Песочный безухий, штатная комплектация, 56 размер. Стоимость 49550 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk2_bu_s_st_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(2BSS56)"])
+                        @dp.message_handler(Text(equals=["Заказать(2BSS56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(2BSS)"])
+                    @dp.message_handler(Text(equals=["58(2BSS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 Песочный безухий, штатная комплектация, 58 размер. Стоимость 49550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_bu_s_st_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2BSS58)"])
+                        @dp.message_handler(Text(equals=["Заказать(2BSS58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["60(2BSS)"])
+                    @dp.message_handler(Text(equals=["60(2BSS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 Песочный безухий, штатная комплектация, 60 размер. Стоимость 49550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_bu_s_st_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2BSS60)"])
+                        @dp.message_handler(Text(equals=["Заказать(2BSS60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                @dp.message_handler(commands = ["Олива(2BS)"])
+                @dp.message_handler(Text(equals=["Олива(2BS)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk2_bu_st_o)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(2BSO)"])
+                    @dp.message_handler(Text(equals=["56(2BSO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк2 Олива безухий, штатная комплектация, 56 размер. Стоимость 49550 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk2_bu_o_st_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(2BSO56)"])
+                        @dp.message_handler(Text(equals=["Заказать(2BSO56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(2BSO)"])
+                    @dp.message_handler(Text(equals=["58(2BSO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 Олива безухий, штатная комплектация, 58 размер. Стоимость 49550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_bu_o_st_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2BSO58)"])
+                        @dp.message_handler(Text(equals=["Заказать(2BSO58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["60(2BSO)"])
+                    @dp.message_handler(Text(equals=["60(2BSO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 Олива безухий, штатная комплектация, 60 размер. Стоимость 49550 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_bu_o_st_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2BSO60)"])
+                        @dp.message_handler(Text(equals=["Заказать(2BSO60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
 
-            @dp.message_handler(commands=["МОД+(2B)"])
+            @dp.message_handler(Text(equals=["МОД+(2B)"]))
             async def helmet(message: types.Message):
                 await bot.send_message(message.from_user.id, 'Выберите цвет', reply_markup=k_mk2_bu_mod)
                 await message.delete()
                 await sklad.sklad_read(message)
 
-                @dp.message_handler(commands = ["Черный(2BM)"])
+                @dp.message_handler(Text(equals=["Черный(2BM)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk2_bu_mod_b)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(2BMB)"])
+                    @dp.message_handler(Text(equals=["56(2BMB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк2 черный безухий, МОД+ комплектация, 56 размер. Стоимость 58250 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk2_bu_b_mod_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(2BMB56)"])
+                        @dp.message_handler(Text(equals=["Заказать(2BMB56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(2BMB)"])
+                    @dp.message_handler(Text(equals=["58(2BMB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 черный безухий, МОД+ комплектация, 58 размер. Стоимость 58250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_bu_b_mod_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2BMB58)"])
+                        @dp.message_handler(Text(equals=["Заказать(2BMB58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["60(2BMB)"])
+                    @dp.message_handler(Text(equals=["60(2BMB)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 черный безухий, МОД+ комплектация, 60 размер. Стоимость 58250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_bu_b_mod_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2BMB60)"])
+                        @dp.message_handler(Text(equals=["Заказать(2BMB60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                @dp.message_handler(commands = ["Песочный(2BM)"])
+                @dp.message_handler(Text(equals=["Песочный(2BM)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk2_bu_mod_s)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(2BMS)"])
+                    @dp.message_handler(Text(equals=["56(2BMS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк2 Песочный безухий, МОД+ комплектация, 56 размер. Стоимость 58250 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk2_bu_s_mod_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(2BMS56)"])
+                        @dp.message_handler(Text(equals=["Заказать(2BMS56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(2BMS)"])
+                    @dp.message_handler(Text(equals=["58(2BMS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 Песочный безухий, МОД+ комплектация, 58 размер. Стоимость 58250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_bu_s_mod_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2BMS58)"])
+                        @dp.message_handler(Text(equals=["Заказать(2BMS58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["60(2BMS)"])
+                    @dp.message_handler(Text(equals=["60(2BMS)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 Песочный безухий, МОД+ комплектация, 60 размер. Стоимость 58250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_bu_s_mod_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2BMS60)"])
+                        @dp.message_handler(Text(equals=["Заказать(2BMS60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                @dp.message_handler(commands = ["Олива(2BM)"])
+                @dp.message_handler(Text(equals=["Олива(2BM)"]))
                 async def helmet(message: types.Message):
                     await bot.send_message(message.from_user.id, 'Выберите размер', reply_markup = k_mk2_bu_mod_o)
                     await message.delete()
 
 
-                    @dp.message_handler(commands = ["56(2BMO)"])
+                    @dp.message_handler(Text(equals=["56(2BMO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id, 'Ваш заказ - шлем мк2 Олива безухий, МОД+ комплектация, 56 размер. Стоимость 58250 рублей. Нажмите кнопку заказать для оформления заказа ', reply_markup = k_mk2_bu_o_mod_56)
                         await message.delete()
 
-                        @dp.message_handler(commands = ["Заказать(2BMO56)"])
+                        @dp.message_handler(Text(equals=["Заказать(2BMO56)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["58(2BMO)"])
+                    @dp.message_handler(Text(equals=["58(2BMO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 Олива безухий, МОД+ комплектация, 58 размер. Стоимость 58250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_bu_o_mod_58)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2BMO58)"])
+                        @dp.message_handler(Text(equals=["Заказать(2BMO58)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
-                    @dp.message_handler(commands=["60(2BMO)"])
+                    @dp.message_handler(Text(equals=["60(2BMO)"]))
                     async def helmet(message: types.Message):
                         await bot.send_message(message.from_user.id,
                                                'Ваш заказ - шлем мк2 Олива безухий, МОД+ комплектация, 60 размер. Стоимость 58250 рублей. Нажмите кнопку заказать для оформления заказа ',
                                                reply_markup=k_mk2_bu_o_mod_60)
                         await message.delete()
 
-                        @dp.message_handler(commands=["Заказать(2BMO60)"])
+                        @dp.message_handler(Text(equals=["Заказать(2BMO60)"]))
                         async def helmet(message: types.Message):
                             await message.delete()
 
 """ Броня
 _____________________________________________________________"""
-@dp.message_handler(commands = ["Бронеплиты"])
+@dp.message_handler(Text(equals=["Бронеплиты"]))
 async def bron(message: types.Message):
     await sklad.sklad_read(message)
     await bot.send_message(message.from_user.id, 'Выберите соответствующий класс защиты', reply_markup = k_br_kz)
     await message.delete()
 
-    @dp.message_handler(commands=["БР3+"])
+    @dp.message_handler(Text(equals=["БР3+"]))
     async def helmet(message: types.Message):
         await bot.send_message(message.from_user.id,
                                """Толщина 26 мм, Вес М - 1580 г., Вес L+10% - 2057 г., Вес ЕL+20% - 2500 г. Материал СВМПЭ
@@ -1118,7 +1119,7 @@ async def bron(message: types.Message):
                                reply_markup=k_br_kz_3)
         await message.delete()
 
-        @dp.message_handler(commands=["M(3+)"])
+        @dp.message_handler(Text(equals=["M(3+)"]))
         async def helmet(message: types.Message):
             await bot.send_message(message.from_user.id,
                                    'Ваш заказ: плита БР3+ размер M. Цена: 20060 рублей. ',
@@ -1126,7 +1127,7 @@ async def bron(message: types.Message):
             await message.delete()
 
 
-        @dp.message_handler(commands=["L(3+)"])
+        @dp.message_handler(Text(equals=["L(3+)"]))
         async def helmet(message: types.Message):
             await bot.send_message(message.from_user.id,
                                    'Ваш заказ: плита БР3+ размер L. Цена: 21565 рублей. ',
@@ -1134,7 +1135,7 @@ async def bron(message: types.Message):
             await message.delete()
 
 
-        @dp.message_handler(commands=["EL(3+)"])
+        @dp.message_handler(Text(equals=["EL(3+)"]))
         async def helmet(message: types.Message):
             await bot.send_message(message.from_user.id,
                                    'Ваш заказ: плита БР3+ размер EL. Цена: 23950 рублей. ',
@@ -1142,7 +1143,7 @@ async def bron(message: types.Message):
             await message.delete()
 
 
-    @dp.message_handler(commands=["БР4"])
+    @dp.message_handler(Text(equals=["БР4"]))
     async def helmet(message: types.Message):
         await bot.send_message(message.from_user.id,
                                 """
@@ -1152,7 +1153,7 @@ async def bron(message: types.Message):
                                reply_markup=k_br_kz_4)
         await message.delete()
 
-        @dp.message_handler(commands=["M(4)"])
+        @dp.message_handler(Text(equals=["M(4)"]))
         async def helmet(message: types.Message):
             await bot.send_message(message.from_user.id,
                                    'Ваш заказ: плита БР4 размер M. цена 20250 рублей',
@@ -1160,7 +1161,7 @@ async def bron(message: types.Message):
             await message.delete()
 
 
-        @dp.message_handler(commands=["L(4)"])
+        @dp.message_handler(Text(equals=["L(4)"]))
         async def helmet(message: types.Message):
             await bot.send_message(message.from_user.id,
                                    'Ваш заказ: плита БР4 размер L. цена 21875 рублей',
@@ -1168,7 +1169,7 @@ async def bron(message: types.Message):
             await message.delete()
 
 
-        @dp.message_handler(commands=["EL(4)"])
+        @dp.message_handler(Text(equals=["EL(4)"]))
         async def helmet(message: types.Message):
             await bot.send_message(message.from_user.id,
                                    'Ваш заказ: плита БР4 размер EL. цена 24000 рублей',
@@ -1176,7 +1177,7 @@ async def bron(message: types.Message):
             await message.delete()
 
 
-    @dp.message_handler(commands=["БР5"])
+    @dp.message_handler(Text(equals=["БР5"]))
     async def helmet(message: types.Message):
         await bot.send_message(message.from_user.id,
                                 """
@@ -1186,7 +1187,7 @@ async def bron(message: types.Message):
                                reply_markup=k_br_kz_5)
         await message.delete()
 
-        @dp.message_handler(commands=["M(5)"])
+        @dp.message_handler(Text(equals=["M(5)"]))
         async def helmet(message: types.Message):
             await bot.send_message(message.from_user.id,
                                    'Ваш заказ: плита БР5 размер M. цена 22 850 рублей',
@@ -1194,7 +1195,7 @@ async def bron(message: types.Message):
             await message.delete()
 
 
-        @dp.message_handler(commands=["L(5)"])
+        @dp.message_handler(Text(equals=["L(5)"]))
         async def helmet(message: types.Message):
             await bot.send_message(message.from_user.id,
                                    'Ваш заказ: плита БР5 размер L. цена 24850 рублей',
@@ -1202,7 +1203,7 @@ async def bron(message: types.Message):
             await message.delete()
 
 
-        @dp.message_handler(commands=["EL(5)"])
+        @dp.message_handler(Text(equals=["EL(5)"]))
         async def helmet(message: types.Message):
             await bot.send_message(message.from_user.id,
                                    'Ваш заказ: плита БР5 размер EL. цена 25350 рублей',
@@ -1214,7 +1215,7 @@ async def bron(message: types.Message):
 """ Намордники
 __________________________________________________________"""
 
-@dp.message_handler(commands = ["ДополнительнаяЗащита"])
+@dp.message_handler(Text(equals=["Дополнительная Защита"]))
 async def bron(message: types.Message):
     await bot.send_message(message.from_user.id, 'В настоящее время в линейке компании АТЛАС представлен один вариант защиты лица.', reply_markup = kb_dz)
     await sklad.sklad_read(message)
@@ -1222,7 +1223,7 @@ async def bron(message: types.Message):
 
 
 
-@dp.message_handler(commands = ["FAQ"])
+@dp.message_handler(Text(equals=["FAQ"]))
 async def opt(message: types.Message):
     await bot.send_message(message.from_user.id, 'Полная информация по изделиям, их эксплуатации, контакты изготовителей представлены на официальной странице компании в социальной сети "ВКонтакте"  \
     https://vk.com/atlas_armor ')

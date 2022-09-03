@@ -26,10 +26,10 @@ zakazaka = None
 async def start(message: types.Message):
     global zakazaka
     zakazaka = message.text
-    price_from_base = await sklad.test_load_price(zakazaka[10:-1])
+    price_from_base = await sklad.test_load_price(zakazaka[9:-1])
     price = [LabeledPrice( "К оплате за товар", price_from_base*100)]
     await bot.send_invoice(message.from_user.id,
-                           title=sklad.spisokT[f'{zakazaka[10:-1]}'].split('.')[0],
+                           title=sklad.spisokT[f'{zakazaka[9:-1]}'].split('.')[0],
                            description='Счет на оплату товара',
                            provider_token=create_bot.pay_token,
                            photo_url="https://sun9-east.userapi.com/sun9-76/s/v1/ig2/P4VMiUEUHEFCeE4wycf5hpufl_gVBACAitld4QfuIt_g2KJbyGB-E3ytLE1vQqrTP3P80GaMKx0nX6UMP1rxOlPz.jpg?size=733x730&quality=95&type=album",
@@ -103,7 +103,7 @@ async def load_tel(message : types.Message, state = FSMContext):
     async with state.proxy() as data:
         data["tel"] = message.text
     await FSMClient.next()
-    if zakazaka[10:-1] in "ЗЛ" or "M" in zakazaka[10:-1]:
+    if zakazaka[9:-1] in "ЗЛ" or "M" in zakazaka[9:-1]:
         await message.reply("Отправьте выбранный цвет чехла для изделия (Multicam, A-TACS FG, Khaki, Coyote Brown, Ranger Green, Dark Olive, ЕМР, Черный), укажите дополнительную информацию к заказу")
     else:
         await message.reply("Укажите дополнительную информацию к заказу")
@@ -111,7 +111,7 @@ async def load_tel(message : types.Message, state = FSMContext):
 
 async def load_zak(message : types.Message, state = FSMContext):
     async with state.proxy() as data:
-        data["zak"] = zakazaka[10:-1]
+        data["zak"] = zakazaka[9:-1]
 
     await message.reply("Заказ оформлен")
     await bot.send_message(5097527515, (sklad.spisokT[f'{data["zak"]}'] + f'\n {data["name"]},\n {data["tel"]},\n {data["adres"]}'))
@@ -159,10 +159,10 @@ async def izm5(message : types.Message, state = FSMContext):
 
 #регистрация хендлеров для передачи в основной файл
 def registr_client(dp: Dispatcher):
-    dp.register_message_handler(izm1, commands=["ИзменитьДанныеПолучателя"], state=None)
+    dp.register_message_handler(izm1, lambda message: "Изменить Данные Получателя" in message.text, state=None)
     dp.register_message_handler(start, lambda message: "Заказать" in message.text, state = None)
     dp.register_message_handler(cancel, state="*", commands='отмена')
-    dp.register_message_handler(obr1, commands=["Обратиться_в_поддержку"], state=None)
+    dp.register_message_handler(obr1, lambda message: "Обратиться в поддержку" in message.text, state=None)
     dp.register_message_handler(cancel, Text(equals='отмена', ignore_case=True), state="*")
     dp.register_message_handler(obr2, state=Obr.sost1)
     dp.register_message_handler(izm2, state=IzmZak.sost1)
