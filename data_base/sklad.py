@@ -104,6 +104,7 @@ def sklad_bd_start():
     base.execute("CREATE TABLE IF NOT EXISTS obr(klient TEXT, text TEXT, otv TEXT)")
     base.execute("CREATE TABLE IF NOT EXISTS users(user TEXT PRIMARY KEY)")
     base.execute("CREATE TABLE IF NOT EXISTS prices(tov TEXT, price INT)")
+    base.execute("CREATE TABLE IF NOT EXISTS zakazaka(id TEXT, tovar TEXT)")
     base.commit()
 
 
@@ -209,3 +210,13 @@ async def izmzak(state):
 async def test_load_price(gods):
     price = cur.execute(f"SELECT price FROM prices WHERE tov == '{gods}'").fetchall()[0][0]
     return price
+
+"""нагибаем глобальную переменную, создаем товар в базе для дальнейшего использования"""
+async def put_to_base(message):
+    cur.execute("INSERT INTO  zakazaka VALUES (?, ?)", (message.from_user.id, message.text[9:-1]))
+    base.commit()
+
+"""нагибаем глобальную переменную ч.2, получение товара"""
+async def get_from_base(message):
+    tov = cur.execute(f"SELECT tovar FROM zakazaka WHERE id == {message.from_user.id} ORDER BY ROWID DESC LIMIT 1").fetchall()[0][0]
+    return tov

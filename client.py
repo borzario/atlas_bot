@@ -20,12 +20,13 @@ class FSMClient(StatesGroup):
     zak = State()
 
 
-zakazaka = None
+#zakazaka = None
 #начало диалога с ботом по адмиской части
 #@dp.message_hendler(commands = ["загрузить"])
 async def start(message: types.Message):
-    global zakazaka
+    #global zakazaka
     zakazaka = message.text
+    await sklad.put_to_base(message)
     price_from_base = await sklad.test_load_price(zakazaka[9:-1])
     price = [LabeledPrice( "К оплате за товар", price_from_base*100)]
     await bot.send_invoice(message.from_user.id,
@@ -102,8 +103,9 @@ async def load_adres(message : types.Message, state = FSMContext):
 async def load_tel(message : types.Message, state = FSMContext):
     async with state.proxy() as data:
         data["tel"] = message.text
+        data["zak"] = await sklad.get_from_base(message)
     await FSMClient.next()
-    if zakazaka[9:-1] in "ЗЛ" or "M" in zakazaka[9:-1]:
+    if data["zak"]  in "ЗЛ" or (data["zak"][2] == "M" and len(data["zak"]) == 6):
         await message.reply("Отправьте выбранный цвет чехла для изделия (Multicam, A-TACS FG, Khaki, Coyote Brown, Ranger Green, Dark Olive, ЕМР, Черный), укажите дополнительную информацию к заказу")
     else:
         await message.reply("Укажите дополнительную информацию к заказу")
@@ -111,10 +113,8 @@ async def load_tel(message : types.Message, state = FSMContext):
 
 async def load_zak(message : types.Message, state = FSMContext):
     async with state.proxy() as data:
-        data["zak"] = zakazaka[9:-1]
-
-    await message.reply("Заказ оформлен")
-    await bot.send_message(5097527515, (sklad.spisokT[f'{data["zak"]}'] + f'\n {data["name"]},\n {data["tel"]},\n {data["adres"]}'))
+        await message.reply("Заказ оформлен")
+        await bot.send_message(5097527515, (sklad.spisokT[f'{data["zak"]}'] + f'\n {data["name"]},\n {data["tel"]},\n {data["adres"]}'))
     await bot.send_message(5097527515, message.text)
     await sklad.zakaz_add(state, message.from_user.id)
     await state.finish()
