@@ -6,6 +6,7 @@ from aiogram.dispatcher.filters import Command
 from aiogram.types.message import ContentType
 
 import create_bot
+import sp_adm
 from create_bot import dp, bot
 from aiogram.dispatcher.filters import Text
 from data_base import sklad
@@ -13,14 +14,22 @@ from keyboard_main import k_c_obr, kb_client_main
 
 
 class FSMClient(StatesGroup):
-
+    photo = State()
     name = State()
     adres = State()
     tel = State()
     zak = State()
 
 
-#zakazaka = None
+async def start(message: types.Message):
+    await sklad.put_to_base(message)
+    await FSMClient.photo.set()
+    await message.reply('Оплатите выбранный товар переводом на карту ХХХХ. Для продолжения оформления заказа отправьте '
+                        'боту скриншот с переводом. Для отмены оформления нажмите кнопку "Отмена"')
+
+
+
+"""#zakazaka = None
 #начало диалога с ботом по адмиской части
 #@dp.message_hendler(commands = ["загрузить"])
 async def start(message: types.Message):
@@ -52,7 +61,7 @@ async def checkout_process(pre_checkout_query: PreCheckoutQuery):
 async def s_pay(message: Message):
     await bot.send_message(message.from_user.id, 'Платеж прошел успешно!!!')
     await bot.send_message(message.from_user.id, 'Введите имя получателя')
-    await FSMClient.name.set()
+    await FSMClient.name.set()"""
 
 class Obr(StatesGroup):
     sost1 = State()
@@ -86,10 +95,15 @@ async def load_photo(message : types.Message, state = FSMContext):
     await FSMClient.next()
     await message.reply("Введи имя получателя")"""
 
+async def load_photo(message : types.Message, state = FSMContext):
+    async with state.proxy() as data:
+        data["photo"] = message.photo[0].file_id
+    await bot.send_message(message.from_user.id, 'Введите имя получателя')
+    await FSMClient.name.set()
 
 async def load_name(message : types.Message, state = FSMContext):
     async with state.proxy() as data:
-        data["photo"] = "скрин у пользователя в платежке"
+        #data["photo"] = "скрин у пользователя в платежке"
         data["name"] = message.text
     await FSMClient.next()
     await message.reply("Введи адрес получения")
@@ -114,8 +128,9 @@ async def load_tel(message : types.Message, state = FSMContext):
 async def load_zak(message : types.Message, state = FSMContext):
     async with state.proxy() as data:
         await message.reply("Заказ оформлен")
-        await bot.send_message(5097527515, (sklad.spisokT[f'{data["zak"]}'] + f'\n {data["name"]},\n {data["tel"]},\n {data["adres"]}'))
-    await bot.send_message(5097527515, message.text)
+        await bot.send_photo(sp_adm.admin, data['photo'])
+        await bot.send_message(sp_adm.admin, (sklad.spisokT[f'{data["zak"]}'] + f'\n {data["name"]},\n {data["tel"]},\n {data["adres"]}'))
+    await bot.send_message(sp_adm.admin, message.text)
     await sklad.zakaz_add(state, message.from_user.id)
     await state.finish()
 
@@ -169,7 +184,7 @@ def registr_client(dp: Dispatcher):
     dp.register_message_handler(izm3, state=IzmZak.sost2)
     dp.register_message_handler(izm4, state=IzmZak.sost3)
     dp.register_message_handler(izm5, state=IzmZak.sost4)
-    #dp.register_message_handler(load_photo, content_types = ['photo'], state = FSMClient.photo)
+    dp.register_message_handler(load_photo, content_types = ['photo'], state = FSMClient.photo)
     dp.register_message_handler(load_name, state = FSMClient.name)
     dp.register_message_handler(load_adres, state=FSMClient.adres)
     dp.register_message_handler(load_tel, state=FSMClient.tel)

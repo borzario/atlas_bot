@@ -143,6 +143,9 @@ async def obrBezOtv(message: types.Message):
     if message.from_user.id == ID:
         await sklad.obrBezOtv(message)
 
+@dp.message_handler(Text(equals=["айди", "Айди", "Айди ", "айди "]))
+async def check_id(message: types.Message):
+    print(message.from_user.id)
 
 #регистрация хендлеров для передачи в основной файл
 def registr_admin(dp: Dispatcher):

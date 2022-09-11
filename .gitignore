@@ -3,3 +3,4 @@ venv/
 .idea/
 sklad.db
 autofication.py
+sp_adm.py
